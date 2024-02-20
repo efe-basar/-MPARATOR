@@ -1,0 +1,73 @@
+import os
+import requests
+from bs4 import BeautifulSoup
+
+def kontrol_et(hesap_dosyasi, basari_dosyasi, login_link):
+    try:
+        with open(hesap_dosyasi, 'r') as f:
+            hesaplar = f.readlines()
+            for hesap in hesaplar:
+                # Burada hesabı kontrol etmek için gerekli kodu yaz
+                if hesap_basarili(hesap, login_link):
+                    with open(basari_dosyasi, 'a') as f:
+                        f.write(hesap)
+    except FileNotFoundError:
+        print("Hesap dosyası bulunamadı.")
+    except Exception as e:
+        print("Bir hata oluştu:", str(e))
+
+def hesap_basarili(hesap, login_link):
+    # Burada hesabın başarılı olup olmadığını kontrol etmek için gerekli kodu yaz
+    # Örnek olarak sadece sayfanın yüklenip yüklenmediğini kontrol edelim
+    try:
+        response = requests.get(login_link)
+        if response.status_code == 200:
+            print(f"{hesap} hesabı başarıyla denendi.")
+            return True
+        else:
+            print(f"{hesap} hesabı deneme sırasında bir hata ile karşılaşıldı.")
+            return False
+    except Exception as e:
+        print(f"{hesap} hesabı deneme sırasında bir hata ile karşılaşıldı:", str(e))
+        return False
+
+def main():
+    print("1. Steam")
+    print("2. Netflix")
+    print("3. BluTV")
+    print("4. Exxen")
+    print("5. Valorant")
+    
+    secim = input("Hangi hesapları kontrol etmek istiyorsunuz? (1-5): ")
+    dosya_adı = ""
+    basari_dosyasi = ""
+    login_link = ""
+    
+    if secim == "1":
+        dosya_adı = "steam.txt"
+        basari_dosyasi = "steam_basari.txt"
+        login_link = "https://store.steampowered.com/login/?l=turkish"
+    elif secim == "2":
+        dosya_adı = "netflix.txt"
+        basari_dosyasi = "netflix_basari.txt"
+        login_link = "https://www.netflix.com/tr/login"
+    elif secim == "3":
+        dosya_adı = "bluetv.txt"
+        basari_dosyasi = "bluetv_basari.txt"
+        login_link = "https://www.blutv.com/giris"
+    elif secim == "4":
+        dosya_adı = "exxen.txt"
+        basari_dosyasi = "exxen_basari.txt"
+        login_link = "https://www.exxen.com/tr/sign-in"
+    elif secim == "5":
+        dosya_adı = "valorant.txt"
+        basari_dosyasi = "valorant_basari.txt"
+        login_link = "https://authenticate.riotgames.com/?client_id=accountodactyl-prod&method=riot_identity&platform=web&redirect_uri=https%3A%2F%2Fauth.riotgames.com%2Fauthorize%3Facr_values%3Durn%253Ariot%253Agold%26client_id%3Daccountodactyl-prod%26redirect_uri%3Dhttps%253A%252F%252Faccount.riotgames.com%252Foauth2%252Flog-in%26response_type%3Dcode%26scope%3Dopenid%2520email%2520profile%2520riot%253A%252F%252Friot.atlas%252Faccounts.edit%2520riot%253A%252F%252Friot.atlas%252Faccounts%252Fpassword.edit%2520riot%253A%252F%252Friot.atlas%252Faccounts%252Femail.edit%2520riot%253A%252F%252Friot.atlas%252Faccounts.auth%2520riot%253A%252F%252Fthird_party.revoke%2520riot%253A%252F%252Fthird_party.query%2520riot%253A%252F%252Fforgetme%252Fnotify.write%2520riot%253A%252F%252Friot.authenticator%252Fauth.code%2520riot%253A%252F%252Friot.authenticator%252Fauthz.edit%2520riot%253A%252F%252Frso%252Fmfa%252Fdevice.write%2520riot%253A%252F%252Friot.authenticator%252Fidentity.add%26state%3D92d0f70d-e454-4c7d-b2ab-40a36d11e091&security_profile=high"
+    else:
+        print("Geçersiz seçim.")
+        return
+    
+    kontrol_et(dosya_adı, basari_dosyasi, login_link)
+
+if __name__ == "__main__":
+    main()
